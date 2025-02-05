@@ -1,40 +1,27 @@
 import React, {useState} from "react"
-
-// icons
 import {IoCloseSharp} from "react-icons/io5"
-import {ImFilePicture} from "react-icons/im"
 
 const Form = ({isActive, setIsActive, addProduct}) => {
     const [formData, setFormData] = useState({
         name: "",
         price: "",
         section: "active",
-        img: null,
     })
 
     const handleChange = (e) => {
-        const {name, value, type, files} = e.target
-        setFormData({
-            ...formData,
-            [name]: type === "file" ? files[0] : value,
-        })
+        const {name, value} = e.target
+        setFormData({...formData, [name]: value})
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (!formData.name || !formData.price) return
-
-        const newProduct = {
-            name: formData.name,
+        addProduct({
+            ...formData,
             price: Number(formData.price),
-            section: formData.section,
             img: "https://www.shutterstock.com/image-vector/no-image-available-picture-coming-600nw-2057829641.jpg",
             time: new Date().toLocaleDateString(),
-        }
-
-        addProduct(newProduct)
-
-        setFormData({name: "", price: "", section: "active", img: null})
+        })
+        setFormData({name: "", price: "", section: "active"})
         setIsActive(false)
     }
 
@@ -48,7 +35,6 @@ const Form = ({isActive, setIsActive, addProduct}) => {
                 className="absolute top-[10px] left-[10px] cursor-pointer h-[40px] w-[40px] rounded-full bg-white border border-gray-300 flex justify-center items-center text-[20px]">
                 <IoCloseSharp />
             </button>
-
             <form
                 onSubmit={handleSubmit}
                 className="w-full flex flex-col gap-[20px]">
@@ -60,7 +46,6 @@ const Form = ({isActive, setIsActive, addProduct}) => {
                     placeholder="Product name"
                     className="border p-[10px] rounded-lg outline-none border-white bg-gray-100"
                 />
-
                 <input
                     type="number"
                     name="price"
@@ -69,7 +54,6 @@ const Form = ({isActive, setIsActive, addProduct}) => {
                     placeholder="Price"
                     className="border p-[10px] rounded-lg outline-none border-white bg-gray-100"
                 />
-
                 <select
                     name="section"
                     value={formData.section}
@@ -79,22 +63,6 @@ const Form = ({isActive, setIsActive, addProduct}) => {
                     <option value="draft">Draft</option>
                     <option value="archived">Archived</option>
                 </select>
-
-                <label
-                    htmlFor="img"
-                    className="opacity-60 cursor-pointer border-dotted p-[10px] border-2 border-white rounded-md flex flex-col gap-[15px] justify-center items-center">
-                    <ImFilePicture />
-                    <p>Add product img</p>
-                </label>
-
-                <input
-                    type="file"
-                    name="img"
-                    id="img"
-                    className="hidden"
-                    onChange={handleChange}
-                />
-
                 <button
                     type="submit"
                     className="bg-blue-400 rounded-md p-[10px] text-white font-medium cursor-pointer active:scale-[.98]">
